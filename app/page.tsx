@@ -28,7 +28,7 @@ export default function Home() {
   const [direction, setDirection] = useState(1);
 
   const isMale = data.gender === 'male';
-  const bg = isMale ? '#0a0a0a' : '#FFFFFF';
+  const bg = data.gender === 'female' ? '#FFFFFF' : '#0a0a0a';
   const point = isMale ? '#FFD700' : '#FF6B6B';
 
 
