@@ -1,101 +1,128 @@
-import Image from "next/image";
+'use client';
+
+import { useState } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
+import Intro from '@/components/Intro';
+import StepBasic from '@/components/StepBasic';
+import StepActivity from '@/components/StepActivity';
+import StepDiet from '@/components/StepDiet';
+import StepGoal from '@/components/StepGoal';
+import Result from '@/components/Result';
+import { UserData, Step } from '@/types';
+import { calculate } from '@/lib/calculator';
+
+const INITIAL_DATA: UserData = {
+  gender: null, ageGroup: null, height: null, weight: null,
+  activityLevel: null, mealLevel: null, proteinLevel: null,
+  alcoholLevel: null, goalLevel: null,
+};
+
+const STEPS: Step[] = ['intro', 'basic', 'activity', 'diet', 'goal', 'result'];
+const STEP_LABELS: Partial<Record<Step, string>> = {
+  basic: '기본 정보', activity: '활동량', diet: '식습관', goal: '목표',
+};
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [step, setStep] = useState<Step>('intro');
+  const [data, setData] = useState<UserData>(INITIAL_DATA);
+  const [direction, setDirection] = useState(1);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  const isMale = data.gender === 'male';
+  const bg = isMale ? '#0a0a0a' : '#FFFFFF';
+  const point = isMale ? '#FFD700' : '#FF6B6B';
+
+  function updateData(updates: Partial<UserData>) {
+    setData((prev) => ({ ...prev, ...updates }));
+  }
+
+  function goNext() {
+    setDirection(1);
+    const idx = STEPS.indexOf(step);
+    if (idx < STEPS.length - 1) setStep(STEPS[idx + 1]);
+  }
+
+  function goBack() {
+    setDirection(-1);
+    const idx = STEPS.indexOf(step);
+    if (idx > 0) setStep(STEPS[idx - 1]);
+  }
+
+  const showProgress = step !== 'intro' && step !== 'result';
+  const progressSteps = ['basic', 'activity', 'diet', 'goal'] as Step[];
+  const progressIdx = progressSteps.indexOf(step);
+
+  const result = step === 'result' && data.gender && data.ageGroup && data.height && data.weight
+    && data.activityLevel && data.mealLevel && data.proteinLevel !== null
+    && data.alcoholLevel !== null && data.goalLevel
+    ? calculate(data) : null;
+
+  const variants = {
+    enter: (dir: number) => ({ x: dir > 0 ? '60%' : '-60%', opacity: 0 }),
+    center: { x: 0, opacity: 1 },
+    exit: (dir: number) => ({ x: dir > 0 ? '-60%' : '60%', opacity: 0 }),
+  };
+
+  return (
+    <main style={{ background: bg, minHeight: '100dvh' }} className="transition-colors duration-500">
+      <div className="mx-auto max-w-[430px] sm:max-w-[480px] md:max-w-[560px] lg:max-w-[720px] relative">
+
+        {/* 진행 바 */}
+        {showProgress && (
+          <div
+            className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-[430px] sm:max-w-[480px] md:max-w-[560px] lg:max-w-[720px] z-50 px-4 pt-4 pb-2"
+            style={{ background: bg }}
           >
-            <Image
-              className="dark:invert"
-              src="https://nextjs.org/icons/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            <div className="flex items-center gap-3 mb-2">
+              <button onClick={goBack} className={`text-sm ${isMale ? 'text-zinc-500' : 'text-zinc-400'}`}>←</button>
+              <span className={`text-xs font-semibold ${isMale ? 'text-zinc-400' : 'text-zinc-500'}`}>
+                {STEP_LABELS[step]}
+              </span>
+            </div>
+            <div className="flex gap-1.5">
+              {progressSteps.map((s, i) => (
+                <div key={s} className="flex-1 h-1 rounded-full transition-all duration-500"
+                  style={{ background: i <= progressIdx ? point : isMale ? '#333' : '#f0d0d0' }} />
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* 스텝 콘텐츠 */}
+        <div className={showProgress ? 'pt-14' : ''} style={{ overflow: 'hidden' }}>
+          <AnimatePresence mode="wait" custom={direction}>
+            <motion.div
+              key={step}
+              custom={direction}
+              variants={variants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ duration: 0.28, ease: 'easeInOut' }}
+            >
+              {step === 'intro' && <Intro onStart={goNext} />}
+              {step === 'basic' && (
+                <StepBasic data={data} onChange={updateData} onNext={goNext} theme={data.gender} />
+              )}
+              {step === 'activity' && (
+                <StepActivity data={data} onChange={updateData} onNext={goNext} />
+              )}
+              {step === 'diet' && (
+                <StepDiet data={data} onChange={updateData} onNext={goNext} />
+              )}
+              {step === 'goal' && (
+                <StepGoal data={data} onChange={updateData} onNext={goNext} />
+              )}
+              {step === 'result' && result && (
+                <Result result={result} data={data} onReset={() => {
+                  setData(INITIAL_DATA);
+                  setDirection(-1);
+                  setStep('intro');
+                }} />
+              )}
+            </motion.div>
+          </AnimatePresence>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="https://nextjs.org/icons/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </div>
+    </main>
   );
 }
