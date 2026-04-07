@@ -25,7 +25,7 @@ export default function AboutPage() {
 
         <section>
           <h2 className="text-base font-bold text-white mb-3">서비스 소개</h2>
-          <p className="text-zinc-400">몸매체크(MomeCheck)는 "목표한 몸까지 얼마나 걸릴까?"라는 질문에 답하는 생활습관 기반 피트니스 시뮬레이터입니다. 복잡한 공식 없이, 지금 내 루틴 그대로 입력하면 1분 안에 결과를 확인할 수 있습니다.</p>
+          <p className="text-zinc-400">몸매체크(MomeCheck)는 &ldquo;목표한 몸까지 얼마나 걸릴까?&rdquo;라는 질문에 답하는 생활습관 기반 피트니스 시뮬레이터입니다. 복잡한 공식 없이, 지금 내 루틴 그대로 입력하면 1분 안에 결과를 확인할 수 있습니다.</p>
         </section>
 
         <section>
