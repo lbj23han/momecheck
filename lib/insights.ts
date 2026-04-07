@@ -1,30 +1,30 @@
-import { CalcResult, UserData } from '@/types';
-import { calculate } from './calculator';
+import { CalcResult, UserData } from "@/types";
+import { calculate } from "./calculator";
 
 export interface Insight {
-  label: string;    // "야식만 줄이면"
-  delta: string;    // "68일 단축" or "B → A"
+  label: string; // "야식만 줄이면"
+  delta: string; // "68일 단축" or "B → A"
   icon: string;
 }
 
 /** 현재 루틴 기준으로 컨텍스트 판정 문장 */
 export function getVerdictLine(dDay: number): string {
-  if (dDay <= 0) return '이미 달성! 지금 유지만 하세요 🏆';
-  if (dDay <= 45) return '한 달 반이면 됩니다. 지금 시작하세요 🔥';
-  if (dDay <= 90) return '지금 루틴이면 여름 전에 가능해요 ☀️';
-  if (dDay <= 120) return '올 여름 끝엔 달라진 모습 기대됩니다 🌊';
-  if (dDay <= 180) return '하반기엔 확실히 달라질 수 있어요 💪';
-  if (dDay <= 365) return '내년 여름을 목표로 잡으세요 📅';
-  return '지금 당장 습관을 바꾸지 않으면 내년도 똑같습니다 😤';
+  if (dDay <= 0) return "이미 달성한거 아닌가요? 유지만 하세요 🏆";
+  if (dDay <= 45) return "한 달 반이면 됩니다. Keep Going! 🔥";
+  if (dDay <= 90) return "지금 루틴이면 세 달이면 가능해요 ☀️";
+  if (dDay <= 120) return "네 달 뒤엔 달라진 모습 기대됩니다 🌊";
+  if (dDay <= 180) return "반년뒤엔 확실히 달라질 수 있어요 💪";
+  if (dDay <= 365) return "내년을 목표로 잡으세요 📅";
+  return "지금 당장 습관을 바꾸지 않으면 내년도 똑같습니다 😤";
 }
 
-const GRADE_ORDER = ['D', 'C', 'B', 'A', 'S'] as const;
+// const GRADE_ORDER = ['D', 'C', 'B', 'A', 'S'] as const;
 
-function gradeUp(grade: CalcResult['grade']): string {
-  const idx = GRADE_ORDER.indexOf(grade);
-  if (idx >= GRADE_ORDER.length - 1) return grade;
-  return GRADE_ORDER[idx + 1];
-}
+// function gradeUp(grade: CalcResult['grade']): string {
+//   const idx = GRADE_ORDER.indexOf(grade);
+//   if (idx >= GRADE_ORDER.length - 1) return grade;
+//  return GRADE_ORDER[idx + 1];
+//}
 
 export function generateInsights(data: UserData, base: CalcResult): Insight[] {
   const results: Insight[] = [];
@@ -39,7 +39,7 @@ export function generateInsights(data: UserData, base: CalcResult): Insight[] {
       const diff = baseDday - r.dDay;
       const gradeChanged = r.grade !== baseGrade;
       results.push({
-        icon: '🏋️',
+        icon: "🏋️",
         label: `운동 +2단계 올리면`,
         delta: gradeChanged
           ? `${diff}일 단축 + ${baseGrade}→${r.grade} 등급 업`
@@ -56,7 +56,7 @@ export function generateInsights(data: UserData, base: CalcResult): Insight[] {
       const diff = baseDday - r.dDay;
       const gradeChanged = r.grade !== baseGrade;
       results.push({
-        icon: '🍽️',
+        icon: "🍽️",
         label: `식사량 한 단계만 줄이면`,
         delta: gradeChanged
           ? `${diff}일 단축 + ${baseGrade}→${r.grade} 등급 업`
@@ -74,7 +74,7 @@ export function generateInsights(data: UserData, base: CalcResult): Insight[] {
       const diff = baseDday - r.dDay;
       const gradeChanged = r.grade !== baseGrade;
       results.push({
-        icon: '🥩',
+        icon: "🥩",
         label: `단백질 한 단계 더 챙기면`,
         delta: gradeChanged
           ? `${diff}일 단축 + ${baseGrade}→${r.grade} 등급 업`
@@ -91,7 +91,7 @@ export function generateInsights(data: UserData, base: CalcResult): Insight[] {
       const diff = baseDday - r.dDay;
       const gradeChanged = r.grade !== baseGrade;
       results.push({
-        icon: '🚫',
+        icon: "🚫",
         label: `술 끊으면`,
         delta: gradeChanged
           ? `${diff}일 단축 + ${baseGrade}→${r.grade} 등급 업`
@@ -111,13 +111,13 @@ export function generateInsights(data: UserData, base: CalcResult): Insight[] {
 }
 
 /** 달성 여부 기준 단계 판정 뱃지 텍스트 */
-export function getGradeBadge(grade: CalcResult['grade']): string {
+export function getGradeBadge(grade: CalcResult["grade"]): string {
   const map: Record<string, string> = {
-    S: '몸짱 달성 🏆',
-    A: '몸짱 가능성 높음',
-    B: '몸짱 가능성 있음',
-    C: '현재 루틴론 어려움',
-    D: '루틴 전면 수정 필요',
+    S: "몸짱 달성 🏆",
+    A: "몸짱 가능성 높음",
+    B: "몸짱 가능성 있음",
+    C: "현재 루틴론 어려움",
+    D: "루틴 전면 수정 필요",
   };
   return map[grade] ?? grade;
 }
