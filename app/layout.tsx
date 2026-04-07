@@ -101,10 +101,10 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
-        {/* Google AdSense - publisher ID 발급 후 아래 ca-pub-XXXX 교체 */}
+        <meta name="google-adsense-account" content="ca-pub-5992854033857462" />
         <script
           async
-          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
+          src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5992854033857462"
           crossOrigin="anonymous"
         />
         <script
