@@ -2,12 +2,14 @@
 
 import { motion } from 'framer-motion';
 import Image from 'next/image';
+import Link from 'next/link';
 import { CalcResult, UserData } from '@/types';
 import { GRADE_META, GOAL_OPTIONS, gradeImageSrc } from '@/lib/constants';
 import { getVerdictLine, generateInsights, getGradeBadge } from '@/lib/insights';
 import { getRecommendation } from '@/lib/recommendations';
 import Simulator from './Simulator';
 import ShareCard from './ShareCard';
+import AdBanner from './AdBanner';
 import RecoCard from './RecoCard';
 import AiUpsell from './AiUpsell';
 
@@ -223,6 +225,18 @@ export default function Result({ result, data, onReset }: Props) {
           처음부터 다시 계산하기 →
         </button>
       </motion.div>
+
+      {/* ⑨ 광고 배너 */}
+      <AdBanner slot="XXXXXXXXXX" format="auto" className="rounded-2xl overflow-hidden" />
+
+      {/* ⑩ 푸터 */}
+      <div className="pt-4 pb-2 flex flex-wrap gap-3 justify-center text-[11px] text-zinc-600">
+        <Link href="/about" className="hover:text-zinc-400">서비스 소개</Link>
+        <span>·</span>
+        <Link href="/privacy" className="hover:text-zinc-400">개인정보처리방침</Link>
+        <span>·</span>
+        <Link href="/terms" className="hover:text-zinc-400">이용약관</Link>
+      </div>
 
     </div>
   );

@@ -1,0 +1,21 @@
+{
+  "name": "몸매체크 MomeCheck",
+  "short_name": "몸매체크",
+  "description": "목표 몸까지 얼마나 걸릴지 계산해보세요",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0a0a",
+  "theme_color": "#0a0a0a",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
