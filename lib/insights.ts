@@ -15,16 +15,16 @@ export function getVerdictLine(dDay: number): string {
   if (dDay <= 120) return "네 달 뒤엔 달라진 모습 기대됩니다 🌊";
   if (dDay <= 180) return "반년뒤엔 확실히 달라질 수 있어요 💪";
   if (dDay <= 365) return "내년을 목표로 잡으세요 📅";
-  return "지금 당장 습관을 바꾸지 않으면 내년도 똑같습니다 😤";
+  if (dDay <= 730) return "지금 당장 습관을 바꾸지 않으면 내년도 똑같습니다 😤";
+  return "솔직히 지금 루틴으론 2년은 걸려요. 첫 번째 변화가 필요해요 🫡";
 }
 
-// const GRADE_ORDER = ['D', 'C', 'B', 'A', 'S'] as const;
+const GRADE_ORDER = ['F', 'D', 'C', 'B', 'A', 'S'] as const;
 
-// function gradeUp(grade: CalcResult['grade']): string {
-//   const idx = GRADE_ORDER.indexOf(grade);
-//   if (idx >= GRADE_ORDER.length - 1) return grade;
-//  return GRADE_ORDER[idx + 1];
-//}
+function gradeImproved(from: string, to: string): boolean {
+  return GRADE_ORDER.indexOf(to as typeof GRADE_ORDER[number]) >
+         GRADE_ORDER.indexOf(from as typeof GRADE_ORDER[number]);
+}
 
 export function generateInsights(data: UserData, base: CalcResult): Insight[] {
   const results: Insight[] = [];
@@ -37,7 +37,7 @@ export function generateInsights(data: UserData, base: CalcResult): Insight[] {
     const r = calculate(data, { activityLevel: actLevel + 2 });
     if (!r.impossible && r.dDay < baseDday) {
       const diff = baseDday - r.dDay;
-      const gradeChanged = r.grade !== baseGrade;
+      const gradeChanged = gradeImproved(baseGrade, r.grade);
       results.push({
         icon: "🏋️",
         label: `운동 +2단계 올리면`,
@@ -54,7 +54,7 @@ export function generateInsights(data: UserData, base: CalcResult): Insight[] {
     const r = calculate(data, { mealLevel: mealLevel - 1 });
     if (!r.impossible && r.dDay < baseDday) {
       const diff = baseDday - r.dDay;
-      const gradeChanged = r.grade !== baseGrade;
+      const gradeChanged = gradeImproved(baseGrade, r.grade);
       results.push({
         icon: "🍽️",
         label: `식사량 한 단계만 줄이면`,
@@ -72,7 +72,7 @@ export function generateInsights(data: UserData, base: CalcResult): Insight[] {
     const r = calculate(data, { proteinLevel: nextProtein });
     if (!r.impossible && r.dDay < baseDday) {
       const diff = baseDday - r.dDay;
-      const gradeChanged = r.grade !== baseGrade;
+      const gradeChanged = gradeImproved(baseGrade, r.grade);
       results.push({
         icon: "🥩",
         label: `단백질 한 단계 더 챙기면`,
@@ -89,7 +89,7 @@ export function generateInsights(data: UserData, base: CalcResult): Insight[] {
     const r = calculate({ ...data, alcoholLevel: 0 });
     if (!r.impossible && r.dDay < baseDday) {
       const diff = baseDday - r.dDay;
-      const gradeChanged = r.grade !== baseGrade;
+      const gradeChanged = gradeImproved(baseGrade, r.grade);
       results.push({
         icon: "🚫",
         label: `술 끊으면`,

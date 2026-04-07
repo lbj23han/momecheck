@@ -31,6 +31,7 @@ export default function Home() {
   const bg = isMale ? '#0a0a0a' : '#FFFFFF';
   const point = isMale ? '#FFD700' : '#FF6B6B';
 
+
   function updateData(updates: Partial<UserData>) {
     setData((prev) => ({ ...prev, ...updates }));
   }

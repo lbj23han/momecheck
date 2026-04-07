@@ -1,4 +1,4 @@
-import { Gender } from '@/types';
+import { Gender, Grade } from '@/types';
 
 export const AGE_VALUES: Record<string, number> = {
   '10s': 17, '20s': 25, '30s': 35, '40s': 45, '50s+': 55,
@@ -29,6 +29,66 @@ export const PROTEIN_BONUS: Record<number, number> = {
 export const ALCOHOL_PENALTY: Record<number, number> = {
   0: 0, 1: -0.05, 2: -0.1, 3: -0.15,
 };
+
+// ─── Grade Meta ──────────────────────────────────────────────────────────────
+
+export const GRADE_META: Record<Grade, {
+  color: string;
+  bgGlow: string;
+  label: string;
+  copy: string;
+  feedback: string;
+}> = {
+  S: {
+    color: '#FFD700',
+    bgGlow: 'rgba(255,215,0,0.12)',
+    label: '이미 몸짱',
+    copy: '이미 몸짱 아니세요? 🏆',
+    feedback: '현재 체형, 남들이 부러워하는 수준이에요. 유지만 잘 해도 충분합니다.',
+  },
+  A: {
+    color: '#00C9A7',
+    bgGlow: 'rgba(0,201,167,0.12)',
+    label: '꽤 괜찮아요',
+    copy: '솔직히 꽤 괜찮아요 💪',
+    feedback: '조금만 더 밀어붙이면 완성형이에요. 마무리가 중요한 시점.',
+  },
+  B: {
+    color: '#4FC3F7',
+    bgGlow: 'rgba(79,195,247,0.10)',
+    label: '관리는 해요',
+    copy: '관리하는 티는 나요 🔵',
+    feedback: '기본기는 갖췄어요. 루틴을 조금만 타이트하게 잡으면 결과가 달라집니다.',
+  },
+  C: {
+    color: '#FFB74D',
+    bgGlow: 'rgba(255,183,77,0.10)',
+    label: '애매해요',
+    copy: '애매해서 아쉬워요 😬',
+    feedback: '한 발짝만 더 나가면 확실히 달라지는 구간이에요. 지금이 분기점.',
+  },
+  D: {
+    color: '#EF5350',
+    bgGlow: 'rgba(239,83,80,0.10)',
+    label: '아직 멀었어요',
+    copy: '이건 아니에요... 😤',
+    feedback: '솔직히 지금 루틴으론 어렵습니다. 딱 한 가지만이라도 바꿔보세요.',
+  },
+  F: {
+    color: '#9E9E9E',
+    bgGlow: 'rgba(158,158,158,0.08)',
+    label: '지금이 시작점',
+    copy: '지금부터가 진짜 시작이에요 🫡',
+    feedback: '목표가 높거나 현재 루틴이 너무 부족해요. 작은 것 하나씩 바꾸는 게 먼저예요.',
+  },
+};
+
+/** 등급 이미지 경로: /grade-A-m.png 또는 /grade-A-f.png */
+export function gradeImageSrc(grade: Grade, gender: 'male' | 'female'): string {
+  return `/grade-${grade}-${gender === 'male' ? 'm' : 'f'}.png`;
+}
+
+// ─── Activity / Meal / Protein Options ────────────────────────────────────────
 
 export const ACTIVITY_OPTIONS: Record<Gender, string[]> = {
   male: [
@@ -110,10 +170,12 @@ export const GOAL_OPTIONS: Record<Gender, string[]> = {
   ],
 };
 
+// Legacy (used in ShareCard, Simulator)
 export const GRADE_COMMENTS: Record<string, string> = {
-  S: '이미 몸짱이시잖아요? 🏆',
+  S: '이미 몸짱아닌가요? 🏆',
   A: '조금만 더요. 진짜로 💪',
   B: '하반기엔 달라진 모습 기대해도 됩니다 🔥',
   C: '내년 여름을 노리세요 📅',
   D: '지금 당장 바꾸지 않으면 내후년도 똑같습니다 😤',
+  F: '지금부터가 진짜 시작이에요. 한 가지만 바꿔보세요 🫡',
 };
