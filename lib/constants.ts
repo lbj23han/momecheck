@@ -42,9 +42,9 @@ export const GRADE_META: Record<Grade, {
   S: {
     color: '#FFD700',
     bgGlow: 'rgba(255,215,0,0.12)',
-    label: '이미 몸짱',
-    copy: '이미 몸짱 아니세요? 🏆',
-    feedback: '현재 체형, 남들이 부러워하는 수준이에요. 유지만 잘 해도 충분합니다.',
+    label: '목표 달성',
+    copy: '목표는 이미 달성하신 것 아닌가요? 🏆',
+    feedback: '목표로 하신 몸은 벌써 이루신 것 같은데요. 지금 상태 유지만 해도 충분합니다.',
   },
   A: {
     color: '#00C9A7',
