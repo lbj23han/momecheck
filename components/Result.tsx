@@ -227,7 +227,7 @@ export default function Result({ result, data, onReset }: Props) {
       </motion.div>
 
       {/* ⑨ 광고 배너 */}
-      <AdBanner slot="XXXXXXXXXX" format="auto" className="rounded-2xl overflow-hidden" />
+      <AdBanner className="rounded-xl" />
 
       {/* ⑩ 푸터 */}
       <div className="pt-4 pb-2 flex flex-wrap gap-3 justify-center text-[11px] text-zinc-600">

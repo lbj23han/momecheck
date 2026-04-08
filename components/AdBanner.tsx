@@ -1,12 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-
-interface Props {
-  slot: string;
-  format?: 'auto' | 'rectangle' | 'horizontal';
-  className?: string;
-}
+import Script from 'next/script';
 
 declare global {
   interface Window {
@@ -14,8 +9,10 @@ declare global {
   }
 }
 
-export default function AdBanner({ slot, format = 'auto', className = '' }: Props) {
-  const ref = useRef<HTMLModElement>(null);
+const CLIENT_ID = 'ca-pub-5992854033857462';
+const SLOT_ID = '9143719859';
+
+export default function AdBanner({ className = '' }: { className?: string }) {
   const pushed = useRef(false);
 
   useEffect(() => {
@@ -29,16 +26,23 @@ export default function AdBanner({ slot, format = 'auto', className = '' }: Prop
   }, []);
 
   return (
-    <div className={`overflow-hidden ${className}`}>
-      <ins
-        ref={ref}
-        className="adsbygoogle"
-        style={{ display: 'block' }}
-        data-ad-client="ca-pub-5992854033857462"
-        data-ad-slot={slot}
-        data-ad-format={format}
-        data-full-width-responsive="true"
+    <>
+      <Script
+        async
+        src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${CLIENT_ID}`}
+        crossOrigin="anonymous"
+        strategy="lazyOnload"
       />
-    </div>
+      <div className={`overflow-hidden ${className}`}>
+        <ins
+          className="adsbygoogle"
+          style={{ display: 'block' }}
+          data-ad-client={CLIENT_ID}
+          data-ad-slot={SLOT_ID}
+          data-ad-format="horizontal"
+          data-full-width-responsive="true"
+        />
+      </div>
+    </>
   );
 }

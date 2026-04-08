@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import Image from 'next/image';
+import AdBanner from '@/components/AdBanner';
 
 export const metadata: Metadata = {
   title: '서비스 소개',
@@ -72,7 +73,9 @@ export default function AboutPage() {
 
       </div>
 
-      <div className="mt-12 pt-8 border-t border-zinc-800 flex gap-4 text-xs text-zinc-600">
+      <AdBanner className="mt-8" />
+
+      <div className="mt-8 pt-6 border-t border-zinc-800 flex gap-4 text-xs text-zinc-600">
         <Link href="/" className="hover:text-zinc-400">홈</Link>
         <Link href="/privacy" className="hover:text-zinc-400">개인정보처리방침</Link>
         <Link href="/terms" className="hover:text-zinc-400">이용약관</Link>
