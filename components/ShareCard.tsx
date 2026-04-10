@@ -131,6 +131,15 @@ export default function ShareCard({ result, data, isMale, insights }: Props) {
         </div>
       </div>
 
+      <a
+        href="https://헬린이맵.com"
+        target="_blank"
+        rel="noreferrer"
+        className={isMale ? "block w-full rounded-xl px-4 py-3 text-center text-sm font-bold transition-all active:scale-95 bg-zinc-800 text-white hover:bg-zinc-700" : "block w-full rounded-xl px-4 py-3 text-center text-sm font-bold transition-all active:scale-95 bg-pink-100 text-pink-700 hover:bg-pink-200"}
+      >
+        눈치 안보고 운동 시작하고 싶으신가요?
+      </a>
+
       {/* 공유 버튼들 */}
       <div className="flex gap-2">
         <button
