@@ -226,27 +226,6 @@ export default function Result({ result, data, onReset }: Props) {
         </button>
       </motion.div>
 
-      {/* ⑨ 정책 지원금 크로스 프로모션 */}
-      <motion.a
-        href="https://findmymoney.vercel.app/"
-        target="_blank"
-        rel="noopener noreferrer"
-        initial={{ opacity: 0, y: 16 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6 }}
-        className={`flex items-center justify-between rounded-2xl px-5 py-4 transition-all active:scale-95 ${
-          isMale
-            ? 'bg-zinc-800 hover:bg-zinc-700'
-            : 'bg-pink-50 border border-pink-100 hover:bg-pink-100'
-        }`}
-      >
-        <div>
-          <div className={`text-[10px] mb-0.5 ${isMale ? 'text-zinc-500' : 'text-zinc-400'}`}>혹시 궁금하시다면</div>
-          <div className={`text-sm font-bold ${isMale ? 'text-zinc-200' : 'text-zinc-700'}`}>나에게 맞는 정책 지원금이 있을까요?</div>
-        </div>
-        <span className={`text-lg ${isMale ? 'text-zinc-500' : 'text-pink-300'}`}>→</span>
-      </motion.a>
-
       {/* ⑩ 광고 배너 */}
       <AdBanner className="rounded-xl" />
 

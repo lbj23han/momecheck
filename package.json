@@ -3,12 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "dev": "granite dev",
+    "build": "ait build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "deploy": "ait deploy"
   },
   "dependencies": {
+    "@apps-in-toss/web-framework": "^2.4.7",
     "framer-motion": "^12.38.0",
     "html2canvas": "^1.4.1",
     "next": "14.2.35",
