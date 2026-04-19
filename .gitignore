@@ -37,6 +37,13 @@ next-env.d.ts
 
 .granite
 
-.granite
+# toss build output
+/dist
+*.ait
 
-.granite
+# appintoss upload images (local only)
+/public/1.png
+/public/2.png
+/public/3.png
+/public/4.png
+/public/appintoss_*.jpg

@@ -1,5 +1,14 @@
+const isTossBuild = process.env.TOSS_BUILD === 'true';
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  ...(isTossBuild && {
+    output: 'export',
+    distDir: 'dist/web',
+  }),
+  images: {
+    unoptimized: isTossBuild,
+  },
   async headers() {
     return [
       {
