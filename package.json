@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "granite dev",
     "build": "ait build",
+    "build:toss": "TOSS_BUILD=true next build",
     "start": "next start",
     "lint": "next lint",
     "deploy": "ait deploy"

@@ -14,7 +14,13 @@ function detectBodyType(
   const isMale = gender === 'male';
 
   if (activityLevel >= 7 && bodyFatPct < (isMale ? 18 : 24)) return 'athletic';
-  if (bmi <= 25 && bodyFatPct > (isMale ? 25 : 33)) return 'lean_fat';
+
+  // Primary lean_fat: BMI 정상 범위인데 추정 체지방이 높음 (기준 완화)
+  if (bmi <= 25 && bodyFatPct > (isMale ? 22 : 30)) return 'lean_fat';
+  // Secondary lean_fat: 활동량 매우 적음 + 정상 BMI + 근육량 낮음 → 마른비만
+  // (Deurenberg 공식이 마른 체형의 체지방률을 과소평가하므로 보완)
+  if (activityLevel <= 2 && bmi >= 18.5 && bmi < 25 && muscleMass < (isMale ? 27 : 17)) return 'lean_fat';
+
   if (bodyFatPct < (isMale ? 15 : 22) && muscleMass < (isMale ? 28 : 18)) return 'hidden_muscle';
   if (bmi > 27 && bodyFatPct > (isMale ? 28 : 35)) return 'high_fat';
   return 'normal';
@@ -94,10 +100,13 @@ export function calculate(data: UserData, overrides?: {
 
   // ── 이미 달성 ───────────────────────────────────────────────────────────────
   if (weightToLose <= 0) {
+    // 마른비만은 체성분 리컴포지션이 필요하므로 S 등급 불가
+    const zeroGrade: Grade = bodyType === 'lean_fat' ? 'B' : 'S';
+    const zeroDDay = bodyType === 'lean_fat' ? 90 : 0;
     return {
       bmr, tdee, estimatedIntake, bodyFatPct, muscleMass,
       targetBodyFatPct, weightToLose: 0, weeklyLossRate: 0,
-      dDay: 0, grade: 'S', impossible: false, bodyType, unrealisticGoal,
+      dDay: zeroDDay, grade: zeroGrade, impossible: false, bodyType, unrealisticGoal,
     };
   }
 
@@ -156,7 +165,13 @@ export function calculate(data: UserData, overrides?: {
 
   // ── D-Day ────────────────────────────────────────────────────────────────────
   const weeks = weightToLose / weeklyLossRate;
-  const dDay = Math.round(weeks * 7);
+  let dDay = Math.round(weeks * 7);
+
+  // ── 마른비만 페널티 ─────────────────────────────────────────────────────────
+  // 마른비만은 체중보다 체성분 개선이 목표 → 리컴포지션에 최소 90일 필요
+  // 공식 체지방률 과소평가로 dDay=0(S등급)이 나오는 경우를 방지
+  if (bodyType === 'lean_fat' && dDay < 90) dDay = 90;
+
   const grade = calcGrade(dDay);
 
   return {

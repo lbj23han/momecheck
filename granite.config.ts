@@ -12,7 +12,7 @@ export default defineConfig({
     port: 3000,
     commands: {
       dev: 'next dev',
-      build: 'TOSS_BUILD=true next build',
+      build: 'npm run build:toss',
     },
   },
   permissions: [],

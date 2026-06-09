@@ -12,6 +12,7 @@ import ShareCard from './ShareCard';
 import AdBanner from './AdBanner';
 import RecoCard from './RecoCard';
 import AiUpsell from './AiUpsell';
+import ResultInterstitialAd from './ResultInterstitialAd';
 
 interface Props {
   result: CalcResult;
@@ -49,6 +50,7 @@ export default function Result({ result, data, onReset }: Props) {
 
   return (
     <div className="flex flex-col min-h-[100dvh] overflow-y-auto px-4 pt-6 pb-12 space-y-4">
+      <ResultInterstitialAd />
 
       {/* ① HERO 카드 ─────────────────────────────────────────────────────────── */}
       <motion.div

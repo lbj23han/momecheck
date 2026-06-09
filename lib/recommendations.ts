@@ -46,10 +46,73 @@ function getDietPlan(
   tdee: number,
   calDeficit: number,
   goalLevel: number,
+  bodyType?: BodyType,
 ): DietPlan {
   const isMale = gender === 'male';
   const target = Math.max(1200, tdee - Math.min(700, calDeficit * 0.9));
   const targetRound = Math.round(target / 50) * 50;
+
+  // 마른비만 전용: 고단백 리컴포지션 식단
+  if (bodyType === 'lean_fat') {
+    const leanTarget = Math.round(Math.max(1400, tdee - 200) / 50) * 50; // 소폭 적자만
+    return {
+      title: `하루 ${leanTarget.toLocaleString()}kcal · 고단백 리컴포지션 식단`,
+      kcalTarget: leanTarget,
+      meals: [
+        {
+          label: '아침',
+          items: isMale ? [
+            { name: '달걀', amount: '3개 (삶은)', kcal: 210, protein: 18 },
+            { name: '그릭요거트', amount: '150g', kcal: 140, protein: 14 },
+            { name: '귀리/오트밀', amount: '50g', kcal: 190, protein: 6 },
+          ] : [
+            { name: '달걀', amount: '2개 (삶은)', kcal: 140, protein: 12 },
+            { name: '그릭요거트', amount: '150g', kcal: 140, protein: 14 },
+            { name: '바나나', amount: '1/2개', kcal: 45, protein: 1 },
+          ],
+        },
+        {
+          label: '점심',
+          items: isMale ? [
+            { name: '현미밥', amount: '150g', kcal: 220, protein: 4 },
+            { name: '닭가슴살 훈제', amount: '2팩', kcal: 220, protein: 46 },
+            { name: '두부', amount: '100g', kcal: 80, protein: 7 },
+            { name: '나물 반찬', amount: '2가지', kcal: 80, protein: 3 },
+          ] : [
+            { name: '현미밥', amount: '100g', kcal: 150, protein: 3 },
+            { name: '닭가슴살 훈제', amount: '1팩', kcal: 110, protein: 23 },
+            { name: '두부', amount: '100g', kcal: 80, protein: 7 },
+            { name: '채소 반찬', amount: '2가지', kcal: 60, protein: 2 },
+          ],
+        },
+        {
+          label: '저녁',
+          items: isMale ? [
+            { name: '고구마', amount: '150g', kcal: 135, protein: 2 },
+            { name: '연어 or 참치캔', amount: '1인분', kcal: 180, protein: 30 },
+            { name: '브로콜리', amount: '200g', kcal: 60, protein: 5 },
+          ] : [
+            { name: '고구마', amount: '100g', kcal: 90, protein: 1 },
+            { name: '참치캔', amount: '1캔', kcal: 130, protein: 28 },
+            { name: '채소 샐러드', amount: '1그릇', kcal: 50, protein: 2 },
+          ],
+        },
+        {
+          label: '간식',
+          items: isMale ? [
+            { name: '프로틴 쉐이크', amount: '1스쿱', kcal: 120, protein: 25 },
+            { name: '아몬드', amount: '20알', kcal: 120, protein: 4 },
+          ] : [
+            { name: '그릭요거트', amount: '100g', kcal: 100, protein: 10 },
+            { name: '견과류', amount: '한 줌', kcal: 100, protein: 3 },
+          ],
+        },
+      ],
+      tip: isMale
+        ? '마른비만은 체중 감량이 아닌 체성분 개선이 목표예요. 단백질을 체중 × 1.8~2g 섭취하면서 웨이트를 해야 근육이 늘고 체지방이 빠집니다.'
+        : '마른비만은 다이어트보다 근력운동이 먼저예요. 단백질을 체중 × 1.5g 이상 채우고 웨이트를 시작하면 체형이 확실히 달라져요.',
+    };
+  }
 
   // 고목표(바디프로필급) 정밀 식단
   if (goalLevel >= 4) {
@@ -170,7 +233,23 @@ function getDietPlan(
 
 // ─── 운동 플랜 ────────────────────────────────────────────────────────────────
 
-function getExercisePlan(activityLevel: number, goalLevel: number, isMale: boolean): ExercisePlan {
+function getExercisePlan(activityLevel: number, goalLevel: number, isMale: boolean, bodyType?: BodyType): ExercisePlan {
+  // 마른비만은 활동량과 무관하게 웨이트 중심 루틴
+  if (bodyType === 'lean_fat') {
+    return {
+      title: '🏋️ 마른비만 전용 · 웨이트 우선 루틴',
+      schedule: '주 3~4일 · 유산소 최소화',
+      items: [
+        '월·수·금: 전신 웨이트 트레이닝 (스쿼트·데드리프트·벤치·로우)',
+        '세트당 8~12회, 3세트 · 근력 자극에 집중',
+        isMale ? '유산소는 운동 후 10~15분 저강도만 (과도한 유산소 지양)' : '유산소는 주 2회 20분 이내로 제한',
+        '운동 직후 단백질 30~40g 섭취',
+        '매일 7~8시간 수면 (근육 합성의 핵심)',
+      ],
+      tip: '마른비만은 유산소가 아닌 근력운동이 먼저예요. 근육이 늘어야 기초대사량이 올라가고 체지방이 자연히 줄어듭니다. 체중계 숫자보다 몸의 변화를 보세요.',
+    };
+  }
+
   if (activityLevel <= 2) {
     return {
       title: '🚶 걷기부터 시작',
@@ -271,8 +350,8 @@ export function getRecommendation(data: UserData, result: CalcResult): Recommend
   const isMale = data.gender === 'male';
   const calDeficit = result.tdee - result.estimatedIntake;
 
-  const diet = getDietPlan(data.gender!, result.tdee, calDeficit, data.goalLevel ?? 1);
-  const exercise = getExercisePlan(data.activityLevel ?? 1, data.goalLevel ?? 1, isMale);
+  const diet = getDietPlan(data.gender!, result.tdee, calDeficit, data.goalLevel ?? 1, result.bodyType);
+  const exercise = getExercisePlan(data.activityLevel ?? 1, data.goalLevel ?? 1, isMale, result.bodyType);
   const warnings = getWarnings(data, result);
   const { label: bodyTypeLabel, desc: bodyTypeDesc } = BODY_TYPE_META[result.bodyType];
 
